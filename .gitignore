@@ -4,19 +4,27 @@ __pycache__/
 *$py.class
 *.so
 .Python
-*.log
-agent.log
+*.egg-info/
+dist/
+build/
 
 # Virtual Environment
 venv/
 env/
 ENV/
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# Logs
+*.log
+agent.log
+
+# Environment
+.env
 
 # OS
 .DS_Store

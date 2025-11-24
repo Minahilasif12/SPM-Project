@@ -1,417 +1,257 @@
-# Market Trend Monitor Agent
+# Business Trend Monitor Agent
 
-**Simple AI Worker Agent for Market Trend Analysis**
-
----
-
-## 👥 Team Information
-
-| Name | Roll Number | Role |
-|------|-------------|------|
-| Abdul Hannan | 22i-2441 | Project Manager |
-| Agha Ahsan | 22i-1117 | Data & Testing Lead |
-| Minahil Asif | 22i-2710 | Lead Developer |
-
-**Course:** Fundamentals of Software Project Management  
-**Instructor:** Dr. Behjat Zuhaira  
-**Section:** D  
-**Deadline:** November 30, 2025
-
----
+AI-powered agent that analyzes emerging business trends across various sectors using Google Gemini API.
 
 ## 🎯 Project Overview
 
-The **Market Trend Monitor Agent** is a lightweight AI worker agent that analyzes market data and provides insights on:
+**Agent Name**: Business Trend Monitor Agent  
+**Purpose**: Continuously scans and analyzes business trends to provide adaptive insights  
+**Team**: Abdul Hannan (PM), Agha Ahsan (Data & QA), Minahil Asif (Lead Dev)  
+**Course**: Software Project Management (Dr. Behjat Zuhaira, Section D)
 
-- 📈 **Trend Analysis** - Identify bullish, bearish, or neutral trends
-- 💬 **Sentiment Analysis** - Analyze market sentiment from text
-- 🔮 **Price Prediction** - Predict future price movements
-- ⚠️ **Anomaly Detection** - Detect unusual market patterns
+## ✨ Features
 
-### Key Features
-
-✅ Simple Python implementation (no complex dependencies)  
-✅ JSON API for easy integration  
-✅ Works with Supervisor-Worker architecture  
-✅ Built-in memory management (short-term & long-term)  
-✅ Comprehensive logging  
-✅ Health monitoring  
-
----
-
-## 🏗️ Architecture
-
-```
-        SUPERVISOR (Provided by FAST)
-                    ↓
-            JSON Request
-                    ↓
-    ┌───────────────────────────────┐
-    │  MARKET TREND MONITOR AGENT   │
-    │  (Our Implementation)         │
-    │                               │
-    │  • Trend Analysis             │
-    │  • Sentiment Analysis         │
-    │  • Price Prediction           │
-    │  • Anomaly Detection          │
-    │  • Memory Management          │
-    └───────────────────────────────┘
-                    ↓
-            JSON Response
-                    ↓
-        SUPERVISOR (Provided by FAST)
-```
-
----
+- **Multi-Sector Analysis**: Technology, E-commerce, Healthcare, Sustainability, Finance, Education, Manufacturing, Retail
+- **AI-Powered Insights**: Uses Google Gemini 1.5 Flash for advanced trend analysis
+- **Fallback Mode**: Works without API key using intelligent keyword analysis
+- **Memory Management**: Tracks recent analyses (50 short-term, 1000 long-term)
+- **RESTful API**: JSON-based communication for supervisor integration
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 1. Install Dependencies
 
-- Python 3.8 or higher
-- pip (Python package manager)
-
-### Installation
-
-1. **Navigate to project folder:**
-   ```powershell
-   cd C:\Users\DELL\Downloads\spm-a4
-   ```
-
-2. **Install dependencies:**
-   ```powershell
-   pip install -r requirements.txt
-   ```
-
-3. **Run the agent:**
-   ```powershell
-   python agent.py
-   ```
-
-4. **Verify it's running:**
-   ```powershell
-   curl http://localhost:5000/health
-   ```
-
----
-
-## 📡 API Endpoints
-
-### 1. Health Check
-
-**Endpoint:** `GET /health`
-
-**Response:**
-```json
-{
-  "status": "active",
-  "agent_id": "market-trend-agent-001",
-  "agent_name": "Market Trend Monitor",
-  "version": "1.0.0",
-  "timestamp": "2025-11-23T10:30:00"
-}
+```bash
+pip install -r requirements.txt
 ```
 
----
+### 2. Configure API Key (Optional but Recommended)
 
-### 2. Agent Information
+Get your free Gemini API key: https://makersuite.google.com/app/apikey
 
-**Endpoint:** `GET /info`
+```bash
+# Copy example file
+cp .env.example .env
 
-**Response:**
-```json
-{
-  "agent_id": "market-trend-agent-001",
-  "agent_name": "Market Trend Monitor",
-  "version": "1.0.0",
-  "team": [
-    {"name": "Abdul Hannan", "roll": "22i-2441", "role": "Project Manager"},
-    {"name": "Agha Ahsan", "roll": "22i-1117", "role": "Data & Testing"},
-    {"name": "Minahil Asif", "roll": "22i-2710", "role": "Lead Developer"}
-  ],
-  "capabilities": [
-    "trend_analysis",
-    "sentiment_analysis",
-    "price_prediction",
-    "anomaly_detection"
-  ],
-  "memory_stats": {
-    "short_term_count": 15,
-    "long_term_count": 42
-  },
-  "status": "ready"
-}
+# Edit .env and add your key
+GEMINI_API_KEY=your_actual_key_here
 ```
 
----
+**Note**: Agent works in fallback mode without API key, but AI analysis provides better insights!
 
-### 3. Main Analysis Endpoint
+### 3. Run the Agent
 
-**Endpoint:** `POST /analyze`
-
-**Content-Type:** `application/json`
-
----
-
-#### 📈 Trend Analysis
-
-**Request:**
-```json
-{
-  "type": "trend",
-  "market": "BTC/USD",
-  "prices": [45000, 45500, 46000, 45800, 46500, 47000],
-  "volumes": [1200000, 1300000, 1250000, 1400000, 1350000, 1450000]
-}
+```bash
+python agent.py
 ```
 
-**Response:**
-```json
-{
-  "task_id": "abc-123-def",
-  "status": "success",
-  "agent_id": "market-trend-agent-001",
-  "market": "BTC/USD",
-  "analysis_type": "trend",
-  "result": {
-    "trend": "bullish",
-    "strength": "moderate",
-    "price_change_percent": 4.44,
-    "current_price": 47000,
-    "average_volume": 1325000,
-    "insights": ["Strong upward momentum detected"]
-  },
-  "timestamp": "2025-11-23T10:35:00"
-}
-```
+Server starts on http://localhost:5000
 
----
+### 4. Test the Agent
 
-#### 💬 Sentiment Analysis
-
-**Request:**
-```json
-{
-  "type": "sentiment",
-  "market": "ETH/USD",
-  "texts": [
-    "Bitcoin shows strong bullish momentum",
-    "Market rally continues with high growth",
-    "Investors profit from surge in prices"
-  ]
-}
-```
-
-**Response:**
-```json
-{
-  "task_id": "xyz-456-abc",
-  "status": "success",
-  "agent_id": "market-trend-agent-001",
-  "market": "ETH/USD",
-  "analysis_type": "sentiment",
-  "result": {
-    "sentiment": "positive",
-    "score": 0.85,
-    "positive_signals": 9,
-    "negative_signals": 0,
-    "texts_analyzed": 3
-  },
-  "timestamp": "2025-11-23T10:40:00"
-}
-```
-
----
-
-#### 🔮 Price Prediction
-
-**Request:**
-```json
-{
-  "type": "prediction",
-  "market": "BTC/USD",
-  "prices": [45000, 45500, 46000, 45800, 46500, 47000, 47200],
-  "prediction_days": 7
-}
-```
-
-**Response:**
-```json
-{
-  "task_id": "pred-789-xyz",
-  "status": "success",
-  "agent_id": "market-trend-agent-001",
-  "market": "BTC/USD",
-  "analysis_type": "prediction",
-  "result": {
-    "current_price": 47200,
-    "predicted_price": 48100,
-    "prediction_days": 7,
-    "expected_change_percent": 1.91,
-    "confidence": "medium",
-    "data_points_used": 7
-  },
-  "timestamp": "2025-11-23T10:45:00"
-}
-```
-
----
-
-#### ⚠️ Anomaly Detection
-
-**Request:**
-```json
-{
-  "type": "anomaly",
-  "market": "BTC/USD",
-  "prices": [45000, 45500, 46000, 52000, 46500, 47000, 46800, 47200, 55000, 47500]
-}
-```
-
-**Response:**
-```json
-{
-  "task_id": "anom-012-def",
-  "status": "success",
-  "agent_id": "market-trend-agent-001",
-  "market": "BTC/USD",
-  "analysis_type": "anomaly",
-  "result": {
-    "anomalies_found": 2,
-    "anomalies": [
-      {
-        "index": 3,
-        "price": 52000,
-        "z_score": 2.34,
-        "deviation_percent": 11.5
-      },
-      {
-        "index": 8,
-        "price": 55000,
-        "z_score": 3.21,
-        "deviation_percent": 18.2
-      }
-    ],
-    "mean_price": 46750,
-    "std_deviation": 3200,
-    "data_points_analyzed": 10
-  },
-  "timestamp": "2025-11-23T10:50:00"
-}
-```
-
----
-
-## 🧪 Testing
-
-### Run Integration Tests
-
-```powershell
+```bash
+# In a new terminal
 python test_agent.py
 ```
 
-### Manual Testing with cURL
+## 📡 API Endpoints
 
-**Health Check:**
-```powershell
-curl http://localhost:5000/health
+### GET /health
+
+Health check endpoint
+
+**Response**:
+```json
+{
+  "status": "active",
+  "agent_id": "business-trend-monitor-001",
+  "agent_name": "Business Trend Monitor Agent",
+  "version": "2.0.0",
+  "gemini_status": "connected",
+  "timestamp": "2025-11-24T..."
+}
 ```
 
-**Trend Analysis:**
-```powershell
-curl -X POST http://localhost:5000/analyze -H "Content-Type: application/json" -d "{\"type\":\"trend\",\"market\":\"BTC/USD\",\"prices\":[45000,46000,47000],\"volumes\":[1000000,1100000,1200000]}"
+### GET /info
+
+Agent information and capabilities
+
+**Response**:
+```json
+{
+  "agent_id": "business-trend-monitor-001",
+  "agent_name": "Business Trend Monitor Agent",
+  "version": "2.0.0",
+  "description": "Analyzes emerging business trends across various sectors",
+  "team": [...],
+  "capabilities": ["sector_trend_analysis", "emerging_pattern_detection", ...],
+  "supported_sectors": ["Technology", "E-commerce", "Healthcare", ...],
+  "memory_stats": {...}
+}
 ```
 
-**Agent Info:**
-```powershell
-curl http://localhost:5000/info
+### POST /analyze
+
+Analyze business trends in a specific sector
+
+**Request**:
+```json
+{
+  "sector": "Technology",
+  "keywords": ["AI", "automation", "cloud computing"],
+  "type": "emerging_trends"
+}
 ```
 
----
+**Response**:
+```json
+{
+  "task_id": "uuid",
+  "status": "success",
+  "agent_id": "business-trend-monitor-001",
+  "sector": "Technology",
+  "analysis_type": "emerging_trends",
+  "result": {
+    "sector": "Technology",
+    "trend_direction": "Rising",
+    "strength": "Strong",
+    "confidence": 0.85,
+    "key_patterns": ["AI adoption", "automation growth", "cloud migration"],
+    "insights": [
+      "AI and automation adoption increasing rapidly",
+      "Cloud computing becoming essential infrastructure",
+      "Digital transformation accelerating across industries"
+    ],
+    "recommendation": "Invest in AI capabilities and cloud infrastructure"
+  },
+  "timestamp": "2025-11-24T..."
+}
+```
 
-## 💾 Memory Strategy
+## 🏢 Supported Sectors
 
-### Short-Term Memory
-- **Capacity:** 50 entries (automatically managed)
-- **Purpose:** Track recent tasks and quick lookups
-- **Storage:** In-memory deque (FIFO)
+1. **Technology** - AI, automation, cloud computing
+2. **E-commerce** - Online shopping, mobile commerce
+3. **Healthcare** - Telemedicine, digital health
+4. **Sustainability** - Green business, renewable energy
+5. **Finance** - Digital banking, fintech
+6. **Education** - Online learning, EdTech
+7. **Manufacturing** - Industry 4.0, automation
+8. **Retail** - Omnichannel, customer experience
 
-### Long-Term Memory
-- **Capacity:** 1000 entries
-- **Purpose:** Store successful analyses and patterns
-- **Storage:** In-memory list with size management
+## 🧠 How It Works
 
----
+1. **Input**: Receives sector name and business keywords
+2. **AI Analysis**: Uses Google Gemini to analyze trends (or fallback logic)
+3. **Pattern Detection**: Identifies emerging patterns and business implications
+4. **Insight Generation**: Produces actionable business insights
+5. **Memory Storage**: Saves analysis for future reference
+6. **JSON Output**: Returns structured results to supervisor
+
+## 📊 Analysis Types
+
+- `emerging_trends` - Detect new patterns
+- `market_analysis` - Market movement insights
+- `innovation_tracking` - Technology adoption
+- `trend_forecast` - Future predictions
+- `general` - Comprehensive analysis
+
+## 🔧 Technical Stack
+
+- **Framework**: Flask 3.0.0
+- **AI Model**: Google Gemini 1.5 Flash (free tier)
+- **Language**: Python 3.8+
+- **Memory**: In-memory (deque + list)
+- **Logging**: File + Console
 
 ## 📁 Project Structure
 
 ```
 spm-a4/
-├── agent.py              # Main worker agent (Flask API)
+├── agent.py              # Main agent implementation
 ├── test_agent.py         # Integration tests
-├── requirements.txt      # Python dependencies (Flask only)
-├── README.md            # This file
-└── agent.log            # Runtime logs (auto-generated)
+├── requirements.txt      # Python dependencies
+├── .env.example          # API key template
+├── README.md             # This file
+└── agent.log             # Runtime logs
 ```
 
----
+## 🧪 Testing
 
-## 📊 Rubric Compliance
+Run all integration tests:
 
-| Requirement | Status | Implementation |
-|------------|--------|----------------|
-| **Functionality** | ✅ | 4 analysis types fully working |
-| **Supervisor Integration** | ✅ | JSON API, health check, external callable |
-| **Code Quality** | ✅ | Modular functions, clear documentation |
-| **Deployment** | ✅ | Simple `pip install` + `python agent.py` |
-| **Logging** | ✅ | Detailed logs to file and console |
-| **Health Check** | ✅ | `/health` endpoint returns status |
-| **Integration Testing** | ✅ | 6 comprehensive tests in test_agent.py |
-
----
-
-## 🔧 Troubleshooting
-
-### Port Already in Use
-```powershell
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
+```bash
+python test_agent.py
 ```
 
-### Module Not Found
-```powershell
-pip install -r requirements.txt --force-reinstall
+Tests cover:
+- Health check
+- Agent info
+- Technology sector analysis
+- E-commerce sector analysis
+- Healthcare sector analysis
+- Sustainability sector analysis
+
+Expected: **6/6 tests passed (100%)**
+
+## 🌐 Deployment
+
+**Live URL**: https://minahilasif222.pythonanywhere.com
+
+Deployed on PythonAnywhere (free tier)
+
+Test live agent:
+```bash
+curl https://minahilasif222.pythonanywhere.com/health
 ```
 
-### Agent Not Responding
-Check if agent is running:
-```powershell
-curl http://localhost:5000/health
+## 📝 Example Usage
+
+```bash
+# Analyze Technology trends
+curl -X POST http://localhost:5000/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sector": "Technology",
+    "keywords": ["AI", "automation", "cloud"],
+    "type": "emerging_trends"
+  }'
+
+# Analyze Healthcare trends
+curl -X POST http://localhost:5000/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sector": "Healthcare",
+    "keywords": ["telemedicine", "digital health"],
+    "type": "innovation_tracking"
+  }'
 ```
 
----
+## 🔐 Security Notes
 
-## 📝 Logging
+- Uses free public API (Google Gemini)
+- No sensitive data storage
+- No PII collection
+- Rate limits: 15 requests/minute (Gemini free tier)
 
-All activity is logged to:
-- **Console:** Real-time output
-- **File:** `agent.log` (persistent)
+## 👥 Team
 
-**Log Format:**
-```
-2025-11-23 10:30:00 - INFO - Analysis request - Type: trend, Market: BTC/USD
-2025-11-23 10:30:01 - INFO - Trend analysis for BTC/USD: bullish (moderate)
-2025-11-23 10:30:01 - INFO - Analysis completed - Task: abc-123-def
-```
+- **Abdul Hannan** (22i-2441) - Project Manager
+- **Agha Ahsan** (22i-1117) - Data & Testing Lead
+- **Minahil Asif** (22i-2710) - Lead Developer
 
----
+## 📚 Course Information
 
-## 📞 Support
+**Course**: Fundamentals of Software Project Management  
+**Instructor**: Dr. Behjat Zuhaira  
+**Section**: D  
+**Semester**: Fall 2025  
+**Institution**: FAST NUCES
 
-**Team Lead:** Abdul Hannan (22i-2441)  
-**Course:** Fundamentals of Software Project Management  
-**Instructor:** Dr. Behjat Zuhaira
+## 📄 License
 
----
+Academic Project - FAST NUCES © 2025
 
-**Last Updated:** November 23, 2025
+## 🔗 Repository
+
+GitHub: https://github.com/Minahilasif12/MarketTrendMonitorAgent

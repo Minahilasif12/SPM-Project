@@ -1,157 +1,220 @@
 """
-Simple Integration Tests for Market Trend Monitor Agent
-
-Team: Abdul Hannan (22i-2441), Agha Ahsan (22i-1117), Minahil Asif (22i-2710)
-
-Note: Install requests first: pip install requests
+Integration Tests for Business Trend Monitor Agent
+Tests all endpoints and business trend analysis functionality
 """
 
 try:
     import requests
 except ImportError:
-    print("❌ Error: 'requests' module not installed")
-    print("Please run: pip install requests")
+    print("=" * 60)
+    print("ERROR: 'requests' module not found")
+    print("=" * 60)
+    print("Please install it using:")
+    print("  pip install requests")
+    print("=" * 60)
     exit(1)
 
 import json
 
 BASE_URL = "http://localhost:5000"
 
-def print_header(text):
-    print("\n" + "=" * 60)
-    print(text)
-    print("=" * 60)
-
 def test_health():
-    """Test 1: Health Check"""
-    print_header("TEST 1: Health Check")
+    """Test health check endpoint"""
+    print("=" * 60)
+    print("TEST 1: Health Check")
+    print("=" * 60)
+    
     try:
         response = requests.get(f"{BASE_URL}/health")
         print(f"Status Code: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
-        return response.status_code == 200
+        
+        assert response.status_code == 200
+        assert response.json()['status'] == 'active'
+        print("\n✅ PASS - Health Check\n")
+        return True
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"\n❌ FAIL - Health Check: {e}\n")
         return False
 
 def test_info():
-    """Test 2: Agent Info"""
-    print_header("TEST 2: Agent Info")
+    """Test agent info endpoint"""
+    print("=" * 60)
+    print("TEST 2: Agent Info")
+    print("=" * 60)
+    
     try:
         response = requests.get(f"{BASE_URL}/info")
         print(f"Status Code: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
-        return response.status_code == 200
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert 'capabilities' in data
+        assert 'supported_sectors' in data
+        print("\n✅ PASS - Agent Info\n")
+        return True
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"\n❌ FAIL - Agent Info: {e}\n")
         return False
 
-def test_trend_analysis():
-    """Test 3: Trend Analysis"""
-    print_header("TEST 3: Trend Analysis")
+def test_technology_trend():
+    """Test Technology sector trend analysis"""
+    print("=" * 60)
+    print("TEST 3: Technology Sector Analysis")
+    print("=" * 60)
+    
+    payload = {
+        "sector": "Technology",
+        "keywords": ["AI", "automation", "cloud computing", "machine learning", "digital transformation"],
+        "type": "emerging_trends"
+    }
+    
     try:
-        payload = {
-            "type": "trend",
-            "market": "BTC/USD",
-            "prices": [45000, 45500, 46000, 45800, 46500, 47000, 47500],
-            "volumes": [1200000, 1300000, 1250000, 1400000, 1350000, 1450000, 1500000]
-        }
         response = requests.post(f"{BASE_URL}/analyze", json=payload)
         print(f"Status Code: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
-        return response.status_code == 200
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data['status'] == 'success'
+        assert 'result' in data
+        assert 'trend_direction' in data['result']
+        print("\n✅ PASS - Technology Sector Analysis\n")
+        return True
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"\n❌ FAIL - Technology Sector Analysis: {e}\n")
         return False
 
-def test_sentiment_analysis():
-    """Test 4: Sentiment Analysis"""
-    print_header("TEST 4: Sentiment Analysis")
+def test_ecommerce_trend():
+    """Test E-commerce sector trend analysis"""
+    print("=" * 60)
+    print("TEST 4: E-commerce Sector Analysis")
+    print("=" * 60)
+    
+    payload = {
+        "sector": "E-commerce",
+        "keywords": ["mobile shopping", "personalization", "social commerce", "quick delivery"],
+        "type": "market_analysis"
+    }
+    
     try:
-        payload = {
-            "type": "sentiment",
-            "market": "ETH/USD",
-            "texts": [
-                "Bitcoin shows strong bullish momentum",
-                "Market rally continues with high growth",
-                "Investors profit from surge in prices"
-            ]
-        }
         response = requests.post(f"{BASE_URL}/analyze", json=payload)
         print(f"Status Code: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
-        return response.status_code == 200
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data['sector'] == 'E-commerce'
+        print("\n✅ PASS - E-commerce Sector Analysis\n")
+        return True
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"\n❌ FAIL - E-commerce Sector Analysis: {e}\n")
         return False
 
-def test_price_prediction():
-    """Test 5: Price Prediction"""
-    print_header("TEST 5: Price Prediction")
+def test_healthcare_trend():
+    """Test Healthcare sector trend analysis"""
+    print("=" * 60)
+    print("TEST 5: Healthcare Sector Analysis")
+    print("=" * 60)
+    
+    payload = {
+        "sector": "Healthcare",
+        "keywords": ["telemedicine", "digital health", "AI diagnostics", "patient portals"],
+        "type": "innovation_tracking"
+    }
+    
     try:
-        payload = {
-            "type": "prediction",
-            "market": "BTC/USD",
-            "prices": [45000, 45200, 45500, 45800, 46000, 46300, 46500, 46800, 47000],
-            "prediction_days": 7
-        }
         response = requests.post(f"{BASE_URL}/analyze", json=payload)
         print(f"Status Code: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
-        return response.status_code == 200
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert 'insights' in data['result']
+        print("\n✅ PASS - Healthcare Sector Analysis\n")
+        return True
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"\n❌ FAIL - Healthcare Sector Analysis: {e}\n")
         return False
 
-def test_anomaly_detection():
-    """Test 6: Anomaly Detection"""
-    print_header("TEST 6: Anomaly Detection")
+def test_sustainability_trend():
+    """Test Sustainability sector trend analysis"""
+    print("=" * 60)
+    print("TEST 6: Sustainability Sector Analysis")
+    print("=" * 60)
+    
+    payload = {
+        "sector": "Sustainability",
+        "keywords": ["green business", "renewable energy", "carbon neutral", "ESG"],
+        "type": "trend_forecast"
+    }
+    
     try:
-        payload = {
-            "type": "anomaly",
-            "market": "BTC/USD",
-            "prices": [45000, 45500, 46000, 52000, 46500, 47000, 46800, 47200, 55000, 47500, 47300, 47600]
-        }
         response = requests.post(f"{BASE_URL}/analyze", json=payload)
         print(f"Status Code: {response.status_code}")
         print(f"Response: {json.dumps(response.json(), indent=2)}")
-        return response.status_code == 200
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert 'recommendation' in data['result']
+        print("\n✅ PASS - Sustainability Sector Analysis\n")
+        return True
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"\n❌ FAIL - Sustainability Sector Analysis: {e}\n")
         return False
 
 def main():
-    print("\n" + "🚀" * 30)
-    print("MARKET TREND MONITOR AGENT - INTEGRATION TESTS")
+    """Run all tests"""
+    print("\n")
+    print("🚀" * 30)
+    print("BUSINESS TREND MONITOR AGENT - INTEGRATION TESTS")
     print("Team: Abdul Hannan, Agha Ahsan, Minahil Asif")
     print("🚀" * 30)
+    print("\n")
+    
+    tests = [
+        test_health,
+        test_info,
+        test_technology_trend,
+        test_ecommerce_trend,
+        test_healthcare_trend,
+        test_sustainability_trend
+    ]
     
     results = []
+    for test in tests:
+        results.append(test())
     
-    # Run all tests
-    results.append(("Health Check", test_health()))
-    results.append(("Agent Info", test_info()))
-    results.append(("Trend Analysis", test_trend_analysis()))
-    results.append(("Sentiment Analysis", test_sentiment_analysis()))
-    results.append(("Price Prediction", test_price_prediction()))
-    results.append(("Anomaly Detection", test_anomaly_detection()))
+    # Summary
+    print("=" * 60)
+    print("TEST SUMMARY")
+    print("=" * 60)
     
-    # Print summary
-    print_header("TEST SUMMARY")
-    passed = sum(1 for _, result in results if result)
-    total = len(results)
+    test_names = [
+        "Health Check",
+        "Agent Info",
+        "Technology Sector Analysis",
+        "E-commerce Sector Analysis",
+        "Healthcare Sector Analysis",
+        "Sustainability Sector Analysis"
+    ]
     
-    for test_name, result in results:
+    for name, result in zip(test_names, results):
         status = "✅ PASS" if result else "❌ FAIL"
-        print(f"{status} - {test_name}")
+        print(f"{status} - {name}")
+    
+    passed = sum(results)
+    total = len(results)
+    success_rate = (passed / total) * 100
     
     print(f"\nTotal: {passed}/{total} tests passed")
-    print(f"Success Rate: {(passed/total)*100:.1f}%")
+    print(f"Success Rate: {success_rate:.1f}%")
     
     if passed == total:
         print("\n🎉 ALL TESTS PASSED!")
     else:
-        print("\n⚠️ Some tests failed. Make sure agent is running on port 5000.")
+        print(f"\n⚠️ {total - passed} test(s) failed")
 
 if __name__ == "__main__":
     main()
