@@ -43,10 +43,10 @@ app = Flask(__name__)
 
 # Agent Configuration
 AGENT_CONFIG = {
-    "agent_id": "business-trend-monitor-001",
-    "agent_name": "Business Trend Monitor Agent",
+    "agent_id": "market-trend-monitor-001",
+    "agent_name": "Market Trend Monitor Agent",
     "version": "2.0.0",
-    "description": "Analyzes emerging business trends across various sectors",
+    "description": "Analyzes emerging market trends across various sectors",
     "team": [
         {"name": "Abdul Hannan", "role": "Project Manager", "roll": "22i-2441"},
         {"name": "Agha Ahsan", "role": "Data & Testing", "roll": "22i-1117"},
@@ -340,7 +340,7 @@ def analyze_trends():
 # Main entry point
 if __name__ == '__main__':
     logger.info("=" * 60)
-    logger.info("BUSINESS TREND MONITOR AGENT - STARTING")
+    logger.info("MARKET TREND MONITOR AGENT - STARTING")
     logger.info("=" * 60)
     logger.info(f"Agent ID: {AGENT_CONFIG['agent_id']}")
     logger.info(f"Agent Name: {AGENT_CONFIG['agent_name']}")
@@ -350,7 +350,7 @@ if __name__ == '__main__':
     logger.info("Endpoints:")
     logger.info("  GET  /health  - Health check")
     logger.info("  GET  /info    - Agent information")
-    logger.info("  POST /analyze - Business trend analysis")
+    logger.info("  POST /analyze - Market trend analysis")
     logger.info("=" * 60)
     logger.info(f"Gemini API: {'Enabled' if gemini_model else 'Disabled (Fallback Mode)'}")
     logger.info("=" * 60)

@@ -1,6 +1,6 @@
 """
-Integration Tests for Business Trend Monitor Agent
-Tests all endpoints and business trend analysis functionality
+Integration Tests for Market Trend Monitor Agent
+Tests all endpoints and market trend analysis functionality
 """
 
 try:
@@ -168,7 +168,7 @@ def main():
     """Run all tests"""
     print("\n")
     print("🚀" * 30)
-    print("BUSINESS TREND MONITOR AGENT - INTEGRATION TESTS")
+    print("MARKET TREND MONITOR AGENT - INTEGRATION TESTS")
     print("Team: Abdul Hannan, Agha Ahsan, Minahil Asif")
     print("🚀" * 30)
     print("\n")

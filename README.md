@@ -1,11 +1,11 @@
-# Business Trend Monitor Agent
+# Market Trend Monitor Agent
 
-AI-powered agent that analyzes emerging business trends across various sectors using Google Gemini API.
+AI-powered agent that analyzes emerging market trends across various sectors using Google Gemini API.
 
 ## 🎯 Project Overview
 
-**Agent Name**: Business Trend Monitor Agent  
-**Purpose**: Continuously scans and analyzes business trends to provide adaptive insights  
+**Agent Name**: Market Trend Monitor Agent  
+**Purpose**: Continuously scans and analyzes market trends to provide adaptive insights  
 **Team**: Abdul Hannan (PM), Agha Ahsan (Data & QA), Minahil Asif (Lead Dev)  
 **Course**: Software Project Management (Dr. Behjat Zuhaira, Section D)
 
@@ -64,8 +64,8 @@ Health check endpoint
 ```json
 {
   "status": "active",
-  "agent_id": "business-trend-monitor-001",
-  "agent_name": "Business Trend Monitor Agent",
+  "agent_id": "market-trend-monitor-001",
+  "agent_name": "Market Trend Monitor Agent",
   "version": "2.0.0",
   "gemini_status": "connected",
   "timestamp": "2025-11-24T..."
@@ -79,10 +79,10 @@ Agent information and capabilities
 **Response**:
 ```json
 {
-  "agent_id": "business-trend-monitor-001",
-  "agent_name": "Business Trend Monitor Agent",
+  "agent_id": "market-trend-monitor-001",
+  "agent_name": "Market Trend Monitor Agent",
   "version": "2.0.0",
-  "description": "Analyzes emerging business trends across various sectors",
+  "description": "Analyzes emerging market trends across various sectors",
   "team": [...],
   "capabilities": ["sector_trend_analysis", "emerging_pattern_detection", ...],
   "supported_sectors": ["Technology", "E-commerce", "Healthcare", ...],
