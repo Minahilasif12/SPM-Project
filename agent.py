@@ -67,7 +67,18 @@ AGENT_CONFIG = {
         "Education",
         "Manufacturing",
         "Retail"
-    ]
+    ],
+    # Supervisor Integration
+    "agent_type": "specialist",  # specialist, not supervisor
+    "communication_protocol": "REST_API",
+    "endpoints": {
+        "health": "/health",
+        "info": "/info",
+        "analyze": "/analyze",
+        "register": "/register",  # For supervisor registration
+        "task_status": "/task/<task_id>"  # Check task status
+    },
+    "base_url": "https://minahilasif222.pythonanywhere.com"
 }
 
 # Configure Gemini API
@@ -96,6 +107,8 @@ class SimpleMemory:
     def __init__(self):
         self.short_term = deque(maxlen=50)  # Last 50 analyses
         self.long_term = []  # Successful analyses (max 1000)
+        self.task_queue = {}  # Store tasks with status
+        self.registered_supervisors = []  # Track registered supervisors
         
     def add_short_term(self, data):
         """Add to short-term memory"""
@@ -112,13 +125,44 @@ class SimpleMemory:
                 'data': data
             })
     
+    def add_task(self, task_id, task_data):
+        """Add task to queue"""
+        self.task_queue[task_id] = {
+            'status': 'pending',
+            'data': task_data,
+            'created_at': datetime.now().isoformat(),
+            'updated_at': datetime.now().isoformat()
+        }
+    
+    def update_task(self, task_id, status, result=None):
+        """Update task status"""
+        if task_id in self.task_queue:
+            self.task_queue[task_id]['status'] = status
+            self.task_queue[task_id]['updated_at'] = datetime.now().isoformat()
+            if result:
+                self.task_queue[task_id]['result'] = result
+    
+    def get_task(self, task_id):
+        """Get task by ID"""
+        return self.task_queue.get(task_id)
+    
+    def register_supervisor(self, supervisor_info):
+        """Register a supervisor agent"""
+        self.registered_supervisors.append({
+            'supervisor_id': supervisor_info.get('supervisor_id'),
+            'supervisor_url': supervisor_info.get('supervisor_url'),
+            'registered_at': datetime.now().isoformat()
+        })
+    
     def get_stats(self):
         """Get memory statistics"""
         return {
             "short_term_count": len(self.short_term),
             "short_term_capacity": 50,
             "long_term_count": len(self.long_term),
-            "long_term_capacity": 1000
+            "long_term_capacity": 1000,
+            "active_tasks": len(self.task_queue),
+            "registered_supervisors": len(self.registered_supervisors)
         }
 
 # Initialize memory
@@ -260,6 +304,70 @@ def agent_info():
         "supported_sectors": AGENT_CONFIG["supported_sectors"],
         "memory_stats": memory.get_stats(),
         "status": "ready",
+        "agent_type": AGENT_CONFIG["agent_type"],
+        "communication_protocol": AGENT_CONFIG["communication_protocol"],
+        "endpoints": AGENT_CONFIG["endpoints"],
+        "base_url": AGENT_CONFIG["base_url"],
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
+@app.route('/register', methods=['POST'])
+def register_with_supervisor():
+    """Allow supervisor to register with this agent"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'supervisor_id' not in data:
+            return jsonify({
+                "status": "error",
+                "message": "supervisor_id required",
+                "agent_id": AGENT_CONFIG["agent_id"]
+            }), 400
+        
+        # Store supervisor information
+        memory.register_supervisor(data)
+        
+        logger.info(f"Supervisor registered: {data.get('supervisor_id')}")
+        
+        return jsonify({
+            "status": "registered",
+            "agent_id": AGENT_CONFIG["agent_id"],
+            "agent_name": AGENT_CONFIG["agent_name"],
+            "capabilities": AGENT_CONFIG["capabilities"],
+            "supported_sectors": AGENT_CONFIG["supported_sectors"],
+            "message": "Agent registered successfully with supervisor",
+            "timestamp": datetime.now().isoformat()
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Registration error: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "agent_id": AGENT_CONFIG["agent_id"]
+        }), 500
+
+@app.route('/task/<task_id>', methods=['GET'])
+def get_task_status(task_id):
+    """Get status of a specific task"""
+    task = memory.get_task(task_id)
+    
+    if not task:
+        return jsonify({
+            "status": "error",
+            "message": "Task not found",
+            "task_id": task_id,
+            "agent_id": AGENT_CONFIG["agent_id"]
+        }), 404
+    
+    return jsonify({
+        "status": "success",
+        "task_id": task_id,
+        "task_status": task['status'],
+        "created_at": task['created_at'],
+        "updated_at": task['updated_at'],
+        "result": task.get('result'),
+        "agent_id": AGENT_CONFIG["agent_id"],
         "timestamp": datetime.now().isoformat()
     }), 200
 
@@ -298,8 +406,21 @@ def analyze_trends():
         
         logger.info(f"Analysis request - Sector: {sector}, Type: {query_type}, Task: {task_id}")
         
+        # Add task to queue (for supervisor tracking)
+        memory.add_task(task_id, {
+            'sector': sector,
+            'keywords': keywords,
+            'type': query_type
+        })
+        
+        # Update task status to processing
+        memory.update_task(task_id, 'processing')
+        
         # Perform analysis
         analysis_result = analyze_with_gemini(sector, keywords, query_type)
+        
+        # Update task status to completed
+        memory.update_task(task_id, 'completed', analysis_result)
         
         # Store in memory
         memory.add_short_term({
