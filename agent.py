@@ -42,13 +42,12 @@ logger = logging.getLogger(__name__)
 # Initialize Flask app
 app = Flask(__name__)
 
-# Configure CORS
+# Configure CORS - Allow all origins
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://intelli-biz.vercel.app"],
+        "origins": "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
+        "allow_headers": ["Content-Type", "Authorization"]
     }
 })
 
