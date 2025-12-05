@@ -5,6 +5,7 @@ Team: Abdul Hannan, Agha Ahsan, Minahil Asif
 """
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 import json
 import logging
@@ -40,6 +41,16 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Configure CORS
+CORS(app, resources={
+    r"/*": {
+        "origins": ["https://intelli-biz.vercel.app"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
 
 # Agent Configuration
 AGENT_CONFIG = {

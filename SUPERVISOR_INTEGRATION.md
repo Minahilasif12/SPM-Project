@@ -14,7 +14,7 @@ This guide explains how the Supervisor Agent interacts with your Market Trend Mo
 │                                                              │
 │  - Receives user requests                                   │
 │  - Routes tasks to appropriate agents                       │
-│  - Aggregates results                                       │
+│  - Aggregates results                 V                      │
 │  - Manages workflow                                         │
 └────────────────┬────────────────────────────────────────────┘
                  │
